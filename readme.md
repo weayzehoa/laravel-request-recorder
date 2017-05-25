@@ -6,6 +6,11 @@
 允許 Client 自訂請求與回應的 X-Correlation-ID，若自訂的 X-Correlation-ID 與資料庫衝突，則回應會設置成 409 表示衝突。
 回應部分，是系統完成請求處理後，產生回應，才將此內容寫入資料庫。
 
+安裝
+```
+composer require littlebookboy/laravel-request-recorder
+```
+
 註冊服務提供者
 ```
 LittleBookBoy\Request\Recorder\RequestRecorderServiceProvider::class,
@@ -41,18 +46,12 @@ public function show($id)
 }
 ```
 
-記錄每一次請求的開關可修改```/path/to/project/config/request-recorder.php```，```false```表示關閉
+記錄開關```/path/to/project/config/request-recorder.php```，```false```表示關閉
 ```
 'enabled' => false,
 ```
 
 ## Table
-
-資料表範例，僅列出主要欄位
-
-|                uuid                 |            request_content           |  response_content   |
-|-------------------------------------|:------------------------------------:|--------------------:|
-| 8e6195c4-d1f7-4164-ac58-253f9a15d3df|{"name":"littlebookboy","say":"hello"}|hello                |
 
 記錄資料
 
