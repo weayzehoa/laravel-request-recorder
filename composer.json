@@ -1,0 +1,8 @@
+{
+    "name": "littlebookboy/laravel-request-recorder",
+    "autoload": {
+        "psr-4": {
+            "LittleBookBoy\\Request\\Recorder\\": "src/"
+        }
+    }
+}
