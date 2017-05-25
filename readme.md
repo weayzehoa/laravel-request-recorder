@@ -1,10 +1,10 @@
-### Recorder
+## Recorder
 
 說明
 
-> 記錄器部分，每一次 Client 端發送請求，通過 api route 時，將內容資訊記錄到資料庫中
-> 允許 Client 自訂請求與回應的 X-Correlation-ID，若自訂的 X-Correlation-ID 與資料庫衝突，則回應會設置成 409 表示衝突
-> 回應部分，是系統完成請求處理後，產生回應，才將此內容寫入資料庫
+記錄器部分，每一次 Client 端發送請求，通過 api route 時，將內容資訊記錄到資料庫中。
+允許 Client 自訂請求與回應的 X-Correlation-ID，若自訂的 X-Correlation-ID 與資料庫衝突，則回應會設置成 409 表示衝突。
+回應部分，是系統完成請求處理後，產生回應，才將此內容寫入資料庫。
 
 註冊服務提供者
 ```
@@ -20,7 +20,8 @@ php artisan vendor:publish --provider="LittleBookBoy\Request\Recorder\RequestRec
 ```
 php artisan migrate
 ```
-### Example
+
+## Example
 
 設置 api 路由，例如請求搜尋指定 id 用戶
 ```
@@ -44,6 +45,8 @@ public function show($id)
 ```
 'enabled' => false,
 ```
+
+## Table
 
 資料表範例，僅列出主要欄位
 
