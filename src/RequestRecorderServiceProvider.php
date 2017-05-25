@@ -15,7 +15,7 @@ class RequestRecorderServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        // 設定發佈路徑遷移 migrations
+        // 發佈
         $this->publisher();
 
         // 註冊 api 中介層
