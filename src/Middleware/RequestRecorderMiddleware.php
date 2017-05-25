@@ -18,6 +18,7 @@ class RequestRecorderMiddleware
 
     /**
      * RecorderMiddleware constructor
+     * @param Request $request
      */
     public function __construct(Request $request)
     {
@@ -43,14 +44,13 @@ class RequestRecorderMiddleware
             return Response()->make('', 409);
         }
 
-        // 原始回應
-        $response = $next($request);
         // 在收到請求時就建立記錄
-        $record = $this->storeApiResponseLog($request);
-        $record = $record->toArray();
-        // 將 uuid 加入回應表頭
-        $response->headers->add([self::X_CORRELATION_ID => $record['uuid']]);
-        // 返回加入 uuid 表頭的回應
+        $this->storeApiResponseLog($request);
+
+        // 加上回應表頭
+        $response = $next($request);
+        $response->headers->add([self::X_CORRELATION_ID => $this->requestId]);
+
         return $response;
     }
 
@@ -63,9 +63,6 @@ class RequestRecorderMiddleware
      */
     public function terminate($request, $response)
     {
-        // 寫入回應表頭 Headers，記錄請求識別 id
-        $response->headers->add([self::X_CORRELATION_ID => $this->requestId]);
-
         // 初始化
         $record = new RequestRecords();
         $record->where('uuid', '=', $this->requestId)
@@ -74,6 +71,7 @@ class RequestRecorderMiddleware
 
     /**
      * 創建一筆請求記錄並返回
+     * @param $request
      */
     private function storeApiResponseLog($request)
     {
@@ -91,12 +89,12 @@ class RequestRecorderMiddleware
         $record->ip = $request->ip();
         // 找出對應的請求記錄，或創建一筆請求記錄
         $record->save();
-        // 返回
-        return $record;
     }
 
     /**
      * 判斷是否有自訂請求識別 id，若無則由系統產生一組 uuid 並回傳
+     * @param $request
+     * @return string
      */
     private function getRequestId($request)
     {
