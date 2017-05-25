@@ -40,7 +40,7 @@ php artisan make:controller UserController
 
 對應控制器 UserController
 ```
-public function show($id)
+public function show()
 {
     return collect([
         'name' => 'littlebookboy',
@@ -49,9 +49,13 @@ public function show($id)
 }
 ```
 
-記錄開關```/path/to/project/config/request-recorder.php```，```false```表示關閉
+記錄開關```/path/to/project/config/request-recorder.php```，```enabled false```表示關閉記錄器
 ```
 'enabled' => false,
+```
+若要變更記錄群組可設定```group```，設為```api```表示請求從 api route 進來的請求都會被記錄
+```
+'group' => 'api'
 ```
 
 ## Table
