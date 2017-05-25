@@ -20,7 +20,10 @@ class RequestRecorderServiceProvider extends ServiceProvider
 
         // 註冊 api 中介層
         if (config('request-recorder.recorder.enabled')) {
-            $router->prependMiddlewareToGroup('api', RequestRecorderMiddleware::class);
+            $router->prependMiddlewareToGroup(
+                config('request-recorder.recorder.group'),
+                RequestRecorderMiddleware::class
+            );
         }
     }
 

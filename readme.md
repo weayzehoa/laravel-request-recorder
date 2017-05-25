@@ -42,7 +42,10 @@ php artisan make:controller UserController
 ```
 public function show($id)
 {
-    return collect(User::findOrFail($id));
+    return collect([
+        'name' => 'littlebookboy',
+        'saying' => 'Hello Recorder',
+    ])->toJson();
 }
 ```
 

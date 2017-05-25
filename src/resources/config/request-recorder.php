@@ -1,21 +1,14 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| LittleBookBoy Request Recorder Config
-|--------------------------------------------------------------------------
-|
-|
-*/
+/**
+ * littleBookBoy/laravel-request-recorder Config
+ */
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Recorder
-    |--------------------------------------------------------------------------
-    |
-    | - enabled : true or false
-    |
-    */
+    /**
+     * - enabled : true or false
+     * - group : route middleware group name
+     */
     'recorder' => [
-        'enabled'   => true,
+        'enabled' => true,
+        'group' => 'api',
     ]
 ];
