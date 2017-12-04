@@ -65,9 +65,11 @@ public function show()
 |  Column Name      |         Description        |
 |-------------------|----------------------------|
 |  uuid             |   請求識別 id (Primary Key) |
-|  route            |   請求對應路由              |
+|  method           |   請求 http 方法            |
+|  route            |   請求對應路由               |
 |  route_params     |   路由參數 (json)           |
+|  request_headers  |   請求表頭 (json)           |
 |  request_params   |   請求參數 (json)           |
+|  response_headers |   回應表頭 (json)           |
 |  response_contents|   回應內容 (json)           |
-|  job_status       |   請求處理狀態              |
 |  ip               |   Client 來源 ip           |

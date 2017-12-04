@@ -2,11 +2,10 @@
 
 namespace LittleBookBoy\Request\Recorder\Middleware;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Closure;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Http\Request;
 use LittleBookBoy\Request\Recorder\Models\RequestRecords;
+use Ramsey\Uuid\Uuid;
 
 class RequestRecorderMiddleware
 {
@@ -44,47 +43,46 @@ class RequestRecorderMiddleware
             return Response()->make('', 409);
         }
 
-        // 在收到請求時就建立記錄
-        $this->storeApiResponseLog($request);
+        // 檢查是否要記錄此請求
+        if ($this->isExceptMethod($request->getMethod())) {
+            return $next($request);
+        }
 
         // 加上回應表頭
         $response = $next($request);
         $response->headers->add([self::X_CORRELATION_ID => $this->requestId]);
 
+        // 在收到請求時就建立記錄
+        $this->storeApiResponseLog($request, $response);
+
         return $response;
     }
 
     /**
-     * Terminate an incoming request.
-     *
-     * @param $request
-     * @param $response
-     * @return mixed
-     */
-    public function terminate($request, $response)
-    {
-        // 初始化
-        $record = new RequestRecords();
-        $record->where('uuid', '=', $this->requestId)
-            ->update(['response_contents' => $response->getContent()]);
-    }
-
-    /**
      * 創建一筆請求記錄並返回
+     * @param $response
      * @param $request
      */
-    private function storeApiResponseLog($request)
+    protected function storeApiResponseLog($request, $response)
     {
         // 初始化
         $record = new RequestRecords();
         // 請求識別 id
         $record->uuid = $request->headers->get(self::X_CORRELATION_ID);
+        // 請求方法
+        $record->method = $request->getMethod();
         // 請求路由
         $record->route = $request->route()->uri();
         // 請求路由
         $record->route_params = collect($request->route()->parameters())->toJson();
-        // 收到的請求原始內容轉成 Json
+        // 收到的請求的 Header
+        $record->request_header = collect($request->headers)->toJson();
+        // 收到的請求原始內容
         $record->request_params = collect($request->toArray())->toJson();
+        // 對應請求所回應的 Header
+        $record->response_headers = collect($response->headers)->toJson();
+        // 對應請求所回應的內容
+        $record->response_contents = $response->getContent();
         // 請求來源 ip
         $record->ip = $request->ip();
         // 找出對應的請求記錄，或創建一筆請求記錄
@@ -109,8 +107,16 @@ class RequestRecorderMiddleware
     /**
      * 檢查請求識別 id 是否已存在
      */
-    private function isRequestIdConflict()
+    protected function isRequestIdConflict()
     {
         return (RequestRecords::where('uuid', '=', $this->requestId)->get()->count() > 0);
+    }
+
+    /**
+     * 檢查是否不要記錄此請求
+     */
+    protected function isExceptMethod($method)
+    {
+        return in_array(strtoupper($method), config('request-recorder.recorder.except'));
     }
 }
