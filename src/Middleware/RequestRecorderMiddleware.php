@@ -76,7 +76,7 @@ class RequestRecorderMiddleware
         // 請求路由
         $record->route_params = collect($request->route()->parameters())->toJson();
         // 收到的請求的 Header
-        $record->request_header = collect($request->headers)->toJson();
+        $record->request_headers = collect($request->headers)->toJson();
         // 收到的請求原始內容
         $record->request_params = collect($request->toArray())->toJson();
         // 對應請求所回應的 Header
