@@ -4,16 +4,21 @@
     "description": "Help you have a easy way to record your every request and response information.",
     "homepage": "https://github.com/littlebookboy/laravel-request-recorder",
     "license": "proprietary",
-    "authors": [
-        {
-            "name": "Ching Yuan Su",
-            "email": "kevin2pig@gmail.com",
-            "role": "Developer"
-        }
-    ],
+    "authors": [{
+        "name": "Ching Yuan Su",
+        "email": "kevin2pig@gmail.com",
+        "role": "Developer"
+    }],
     "autoload": {
         "psr-4": {
             "LittleBookBoy\\Request\\Recorder\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LittleBookBoy\\Request\\Recorder\\RequestRecorderServiceProvider"
+            ]
         }
     }
 }
