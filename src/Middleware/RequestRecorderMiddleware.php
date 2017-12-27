@@ -82,7 +82,9 @@ class RequestRecorderMiddleware
         // 對應請求所回應的 Header
         $record->response_headers = collect($response->headers)->toJson();
         // 對應請求所回應的內容
-        $record->response_contents = $response->getContent();
+        $record->response_code = $response->status();
+        // 對應請求所回應的內容
+        $record->response_content = $response->content();
         // 請求來源 ip
         $record->ip = $request->ip();
         // 找出對應的請求記錄，或創建一筆請求記錄

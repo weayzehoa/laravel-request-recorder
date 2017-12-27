@@ -30,8 +30,10 @@ class RequestRecords extends Migration
             $table->text('request_params');
             // 對應請求所回應的 Header
             $table->text('response_headers')->nullable();
+            // 對應請求所回應 code
+            $table->string('response_code', 4);
             // 對應請求所回應的內容
-            $table->text('response_contents')->nullable();
+            $table->text('response_content')->nullable();
             // 請求處理狀態：若為真表示請求已處理完成，不為真表示未完成
             // $table->boolean('job_status')->default(false);
             // 請求來源 ip
