@@ -26,7 +26,7 @@ php artisan vendor:publish --provider="LittleBookBoy\Request\Recorder\RequestRec
 php artisan migrate
 ```
 
-## Example
+## Usage
 
 設置 api 路由，例如請求搜尋指定 id 用戶
 ```
@@ -57,6 +57,43 @@ public function show()
 ```
 'group' => 'api'
 ```
+
+## Except
+
+實務上，有時需要讓系統排除某些 request 不要寫入，本套件提供了兩種排除記錄的方式
+
+1. 排除指定 http method，您可以在 config 中設置 ```except```，表示要記錄除了這些方法之外的請求, 可設置的方法有 ```'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'```，例如設置了 ```GET```，系統將忽略記錄所有 get 請求
+2. 排除指定 route name with http code，您可以在 config 中設置 ```skip_routes```，將經過命名的路由設置到 ```route_name```，並選擇要過濾的狀態碼，若要全部過濾，可選填 ```*``` 或留空
+
+### Config Example
+```
+/**
+ * - enabled : true or false
+ * - group : route middleware group name
+ * - except : 僅記錄除了這些方法之外的請求, 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'
+ * - skip_routes : 僅記錄除了這些路由之外的請求, 也可限定只排除該路由的某些 rsponse http code
+ */
+'recorder' => [
+    'enabled' => true,
+    'group' => 'api',
+    'except' => ['GET'],
+    'skip_routes' => [
+        [
+            'route_name' => 'route.name.1',
+            'http_code' => ['201']
+        ],
+        [
+            'route_name' => 'route.name.2',
+            'http_code' => ['409', '422']
+        ],
+        [
+            'route_name' => 'route.name.3',
+            'http_code' => ['*']
+        ]
+    ]
+]
+```
+
 
 ## Table
 
