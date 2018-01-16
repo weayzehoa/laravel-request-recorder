@@ -17,7 +17,7 @@ class RequestRecords extends Migration
 
             // === 欄位 ===
             // [PK] 請求識別碼，資料意義為表頭名稱 X-Correlation-ID 的值
-            $table->string('uuid', 36)->primary();
+            $table->string('uuid', 36)->comment('請求識別碼，表頭名稱 X-Correlation-ID 的值');
             // 接收到的 Header 參數
             $table->string('method', '8')->comment('接收到的 Header 參數');
             // 請求所走的 route
@@ -42,6 +42,13 @@ class RequestRecords extends Migration
             $table->dateTime('created_at')->comment('Request 請求時間');
             // 主要用來識別寫入 Response 回應的時間
             $table->dateTime('updated_at')->comment('Response 回應時間');
+
+            // [PK]
+            $table->primary('uuid');
+
+            // === 索引 ===
+            $table->index('method');
+            $table->index('response_code');
         });
     }
 
