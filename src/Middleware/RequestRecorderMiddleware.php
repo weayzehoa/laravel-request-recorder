@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use LittleBookBoy\Request\Recorder\Models\RequestRecords;
 use Ramsey\Uuid\Uuid;
+use App;
 
 class RequestRecorderMiddleware
 {
@@ -145,32 +146,34 @@ class RequestRecorderMiddleware
             return false;
         }
 
-        // 使用者在 config 中有匹配到目前請求路由，進入檢查 http code 的設定
-        if (array_key_exists($routeName, $skipRoutes->toArray())) {
-            $dataSet = $skipRoutes->get($routeName)->first();
+        if(explode('.',App::VERSION())[0] == 8){ //判斷Laravel版本
+            // 使用者在 config 中有匹配到目前請求路由，進入檢查 http code 的設定
+            if (array_key_exists($routeName, $skipRoutes->toArray())) {
+                $dataSet = $skipRoutes->get($routeName)->first();
 
-            // 當 config 中對應該路由的 http code 的設定為空或萬用，所有對應該請求的路由都記錄起來
-            if (empty($dataSet['http_code']) || in_array('*', $dataSet['http_code'])) {
-                return true;
+                // 當 config 中對應該路由的 http code 的設定為空或萬用，所有對應該請求的路由都記錄起來
+                if (empty($dataSet['http_code']) || in_array('*', $dataSet['http_code'])) {
+                    return true;
+                }
+                if (in_array($responseCode, $dataSet['http_code'])) {
+                    return true;
+                }
             }
-            if (in_array($responseCode, $dataSet['http_code'])) {
-                return true;
+        }else{
+            // 使用者在 config 中有匹配到目前請求路由，進入檢查 http code 的設定
+            if (array_key_exists($routeName, $skipRoutes->toArray())) {
+                $dataSet = $skipRoutes->get($routeName)->first();
+
+                // 當 config 中對應該路由的 http code 的設定為空或萬用，所有對應該請求的路由都記錄起來
+                if (empty(array_get($dataSet, 'http_code')) || in_array('*', array_get($dataSet, 'http_code'))) {
+                    return true;
+                }
+
+                if (in_array($responseCode, array_get($dataSet, 'http_code'))) {
+                    return true;
+                }
             }
         }
-
-        // // 使用者在 config 中有匹配到目前請求路由，進入檢查 http code 的設定
-        // if (array_key_exists($routeName, $skipRoutes->toArray())) {
-        //     $dataSet = $skipRoutes->get($routeName)->first();
-
-        //     // 當 config 中對應該路由的 http code 的設定為空或萬用，所有對應該請求的路由都記錄起來
-        //     if (empty(array_get($dataSet, 'http_code')) || in_array('*', array_get($dataSet, 'http_code'))) {
-        //         return true;
-        //     }
-
-        //     if (in_array($responseCode, array_get($dataSet, 'http_code'))) {
-        //         return true;
-        //     }
-        // }
 
         return false;
     }
