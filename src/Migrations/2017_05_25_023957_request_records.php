@@ -27,13 +27,13 @@ class RequestRecords extends Migration
             // 接收到的 Header
             $table->text('request_headers')->nullable()->comment('接收到的 Header');
             // 接收到的 Request 參數
-            $table->text('request_params')->comment('接收到的 Request 參數');
+            $table->longText('request_params')->comment('接收到的 Request 參數');
             // 對應請求所回應的 Header
             $table->text('response_headers')->nullable()->comment('對應請求所回應的 Header');
             // 對應請求所回應 code
             $table->string('response_code', 4)->comment('對應請求所回應 http code');
             // 對應請求所回應的內容
-            $table->text('response_content')->nullable()->comment('對應請求所回應的內容');
+            $table->longText('response_content')->nullable()->comment('對應請求所回應的內容');
             // 請求處理狀態：若為真表示請求已處理完成，不為真表示未完成
             // $table->boolean('job_status')->default(false)->comment('請求處理狀態：若為真表示請求已處理完成，不為真表示未完成');
             // 請求來源 ip
