@@ -146,25 +146,28 @@ class RequestRecorderMiddleware
             return false;
         }
 
-        // 使用者在 config 中有匹配到目前請求路由，進入檢查 http code 的設定
-        if (array_key_exists($routeName, $skipRoutes->toArray())) {
-            $dataSet = $skipRoutes->get($routeName)->first();
+        // 未設置 http_code 時，表示該路由所有 response code 皆不寫紀錄
+        if (!isset($dataSet['http_code']) || empty($dataSet['http_code'])) {
+            return true;
+        }
 
-            // 當 config 中對應該路由的 http code 的設定為空
-            if (empty($dataSet['http_code'])) {
-                return true;
-            }
+        // 有設置 http_code，且直接設置為 * 時，表示該路由所有 response code 皆不寫紀錄
+        // 不設定 = 設定 *
+        if (is_array($dataSet['http_code']) && in_array('*', $dataSet['http_code'])) {
+            return true;
+        }
 
-            // 當 config 中對應該路由的 http code 的設定錯誤成字串
-            // 例如: [ 'route_name' => 'index', 'http_code' => 200,400 ],
-            if(!is_array($dataSet['http_code'])){
-                return true;
-            }
+        if (is_string($dataSet['http_code']) && '*' === $dataSet['http_code']) {
+            return true;
+        }
 
-            //當 config 中對應該路由的 http code 的設定為萬用或者有對應response code
-            if (in_array($responseCode, $dataSet['http_code']) || in_array('*', $dataSet['http_code'])) {
-                return true;
-            }
+        // 有設置 http_code，且非為 *，表示該路由符合指定的 response code 時，不寫紀錄
+        if (is_array($dataSet['http_code']) && in_array($responseCode, $dataSet['http_code'])) {
+            return true;
+        }
+
+        if (is_string($dataSet['http_code']) && $responseCode === $dataSet['http_code']) {
+            return true;
         }
 
         return false;
