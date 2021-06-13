@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use LittleBookBoy\Request\Recorder\Models\RequestRecords;
 use Ramsey\Uuid\Uuid;
-use App;
 
 class RequestRecorderMiddleware
 {
